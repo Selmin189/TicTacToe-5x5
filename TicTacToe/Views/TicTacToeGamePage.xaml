@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:TicTacToe.ViewModel"
+             x:DataType="viewModels:TicTacToeGamePageViewModel"
+             xmlns:models="clr-namespace:TicTacToe.Models"
+             x:Class="TicTacToe.Views.TicTacToeGamePage"
+             Title="TicTacToeGamePage">
+    <VerticalStackLayout VerticalOptions="CenterAndExpand" Padding="10" Spacing="10">
+        <Label FontSize="26">
+            <Label.Triggers>
+                <DataTrigger TargetType="Label" Binding="{Binding PlayerTurn}" Value="0">
+                    <Setter Property="Text" Value="Player 1 Turn"/>
+                </DataTrigger>
+                <DataTrigger TargetType="Label" Binding="{Binding PlayerTurn}" Value="1">
+                    <Setter Property="Text" Value="Player 2 Turn"/>
+                </DataTrigger>
+            </Label.Triggers>
+        </Label>
+        <Grid ColumnDefinitions="5*,5*" ColumnSpacing="15">
+            <Frame Grid.Column="0" BackgroundColor="{Binding Player1BackgroundColor}">
+                <Label  Text="{Binding Player1Point, StringFormat='X - {0}'}" FontSize="26" TextColor="Black"/>
+            </Frame>
+            <Frame Grid.Column="1" BackgroundColor="{Binding Player2BackgroundColor}">
+                <Label Text="{Binding Player2Point, StringFormat='O - {0}'}" FontSize="26" TextColor="Black"/>
+            </Frame>
+        </Grid>
+        
+        <CollectionView ItemsSource="{Binding TicTacList}">
+               <CollectionView.ItemsLayout>
+                <GridItemsLayout Span="5" Orientation="Vertical" VerticalItemSpacing="10"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:TicTacToeModel">
+                    <Frame BackgroundColor="White" Padding="0" CornerRadius="10" HeightRequest="60" WidthRequest="60">
+                        <Label Text="{Binding SelectedText}" FontSize="28" TextColor="Black" VerticalTextAlignment="Center" HorizontalTextAlignment="Center"/>
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding Source={x:RelativeSource AncestorType={x:Type viewModels:TicTacToeGamePageViewModel}},Path=SelectedItemCommand}"
+                            CommandParameter="{Binding .}" />
+                        </Frame.GestureRecognizers>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        <Label Text="{Binding PlayerWinOrDrawText}" FontSize="25"/>
+        <Button Text="Restart Game" Command="{Binding RestartGameCommand}" BackgroundColor="MediumPurple"/>
+    </VerticalStackLayout>
+</ContentPage>
